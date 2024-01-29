@@ -1,0 +1,14 @@
+nameDag: Airbate
+owner: Chupakhin Yuriy
+schedule_interval: 0 2 * * *
+description: Описание дага
+start_date: datetime(2024,1,26)
+retries: 3
+retry_delay: timedelta(minutes=30)
+airbyte_conn_id: airbyte
+name_con_1: 7bfc7c83-60d6-443b-aa36-5014916afdfe
+name_con_2: 16e7fe82a-f3e8-4c6e-9899-9c0f84d72099
+name_con_21:26e7fe82a-f3e8-4c6e-9899-9c0f84d72099
+name_con_12:36e7fe82a-f3e8-4c6e-9899-9c0f84d72099
+
+
