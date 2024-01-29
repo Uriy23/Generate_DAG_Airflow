@@ -17,4 +17,4 @@
 #### После того как изменили файл for_dag.txt
 Можно запускать генерацию DAG 
 * dag.py ПУТЬ_к_вашей дирректории Airflow/dags и название нового файла
-  * ПРИМЕР: dag.py Airflow/dags/dag_airbyte.py
+* ПРИМЕР: dag.py Airflow/dags/dag_airbyte.py
