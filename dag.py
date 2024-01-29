@@ -1,3 +1,4 @@
+import sys
 
 def start_text_dag_func(owner,schedule_interval, start_date, retries,retry_delay,description,nameDag):
     text_start = f'''
@@ -44,12 +45,12 @@ def read_conf():
         rows = file.readlines()
     return rows
 
-def create_python_file():
+def create_python_file(path_folder_airflow):
 
     rows = read_conf()
     list_name_conn = []
-    # airflow / dags /
-    with open('dag_airbyte.py','w',encoding='utf-8') as file_dag:
+
+    with open(f'{path_folder_airflow}','w',encoding='utf-8') as file_dag:
 
         default_args = {i.split(':')[0]:i.split(':')[1].replace('\n','').strip() for i in rows if len(i)>4}
 
@@ -77,4 +78,8 @@ def create_python_file():
 
 
 
-create_python_file()
+
+if __name__ == "__main__":
+    folder_airflow = str(sys.argv[1])
+    create_python_file(path_folder_airflow=folder_airflow)
+
