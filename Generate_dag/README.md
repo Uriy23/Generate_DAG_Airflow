@@ -10,7 +10,8 @@
 * retries - Количество попыток запуска при возникновении ошибки 
 * retry_delay - Период запуска при ошибке 
 * airbyte_conn_id - Уникальное имя соединения (Подробнее в файле Connect_Airflow_Airbyte)
-* name_con_1 - ИД Connection Airbyte находится в URl после /connections/
+* name_PP_ - ИД для Postgres-Postgres Connection Airbyte находится в URl после /connections/
+* name_PCH - ИД для соедениний Postgres-CH
 
 Название Connection в файле for_dag.txt должно начинаться с name_ и далее
 любое название 

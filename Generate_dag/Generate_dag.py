@@ -1,4 +1,5 @@
 import sys
+import subprocess
 
 
 def get_tokens_tg():
@@ -32,6 +33,8 @@ from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
 from airflow.providers.telegram.operators.telegram import TelegramOperator
+from airflow.operators.python_operator import PythonOperator
+from Airflow_DBT import start_DBT_TASK
 
 {create_allert_on_tg(get_tokens_tg())}
 
@@ -55,7 +58,7 @@ dag = DAG(
 
 
 def Airbyte_PP(name_con, con_id, airbyte_conn_id):
-    """Шаблон для Создания оператора для каждого Connections из Airbyte Postgres-Postgres"""
+    """Шаблон для Создания оператора для каждого Connections из Airbyte """
     text_func = f'''
 start_airbyte{name_con} = AirbyteTriggerSyncOperator(
          task_id = "{name_con}",
@@ -82,15 +85,15 @@ def read_conf():
     return rows
 
 
-def DBT_start_code():
-    # 1. git clone
-    #     2. Запуск файла start_dbt.py
-    pass
-
-
-def Airbyte_PCH():
-    """Шаблон для Создания оператора для каждого Connections из Airbyte Postgres-CH"""
-    pass
+def create_task_dbt():
+    '''Код для создания Task для запуска DBT'''
+    text_task = '''
+run_DBT = PythonOperator(
+    task_id='run DBT',
+    python_callable=start_DBT_TASK,
+    dag=dag
+    )'''
+    return text_task
 
 
 def create_python_file(path_folder_airflow):
@@ -118,7 +121,18 @@ def create_python_file(path_folder_airflow):
         file_dag.write(start_text_dag)
         # Ищем только ID Connections Airbyte для создания операторов
         for row in default_args:
-            if 'name_' in row:
+            if 'name_PP_' in row:
+                list_name_conn.append(f'start_airbyte{row}')
+                con_id = default_args[row]
+                text_func_connection = Airbyte_PP(name_con=row,
+                                                    con_id=con_id,
+                                                    airbyte_conn_id=default_args['airbyte_conn_id'])
+                file_dag.write(text_func_connection)
+
+        file_dag.write(create_task_dbt())
+        list_name_conn.append('run_DBT')
+        for row in default_args:
+            if 'name_PCH_' in row:
                 list_name_conn.append(f'start_airbyte{row}')
                 con_id = default_args[row]
                 text_func_connection = Airbyte_PP(name_con=row,
