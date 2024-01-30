@@ -50,7 +50,7 @@ def create_end_dags(list_):
 
 def read_conf():
     """Читаем конфиги"""
-    with open('for_dag.txt', encoding='utf-8') as file:
+    with open('Config_generate_dag.txt', encoding='utf-8') as file:
         rows = file.readlines()
     return rows
 
