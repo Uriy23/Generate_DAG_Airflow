@@ -6,7 +6,7 @@
 # Node artifact files
 node_modules/
 dist/
-
+**/Api_tg.txt
 # Compiled Java class files
 *.class
 
