@@ -1,13 +1,14 @@
 import sys
 
+
 def get_tokens_tg():
     with open('Api_tg.txt', encoding='utf-8') as file:
         rows = file.readlines()
-        API_tg = {i.split(':')[0]: i.split(':')[1].replace('\n', '').strip() for i in rows if len(i)>3}
+        API_tg = {i.split(':')[0]: i.split(':')[1].replace('\n', '').strip() for i in rows if len(i) > 3}
     return API_tg
 
-def create_allert_on_tg(tokens):
 
+def create_allert_on_tg(tokens):
     text_allert = f'''
 def on_failure_callback(context):    
     message = "Task failed. DAG: {{0}}, Task: {{1}}, Execution date: {{2}}".format(
@@ -16,17 +17,16 @@ def on_failure_callback(context):
         context['execution_date'])
     for chat_id_person in {tokens['chat_id'].split(' ')}:
         telegram_op = TelegramOperator(task_id='send_telegram',
-                                   token="{tokens['token'].replace('|',':')}", 
+                                   token="{tokens['token'].replace('|', ':')}", 
                                    chat_id=chat_id_person,
                                    text=message)
         telegram_op.execute(context=context)'''
     return text_allert
 
 
-
 def start_text_dag_func(owner, schedule_interval, start_date, retries, retry_delay, description, nameDag):
-    '''Создаем начало файла и заполняем конфиги'''
-    global create_allert_on_tg,get_tokens_tg
+    """Создаем начало файла и заполняем конфиги"""
+    global create_allert_on_tg, get_tokens_tg
     text_start = f'''
 from airflow import DAG
 from datetime import datetime, timedelta
@@ -84,8 +84,10 @@ def read_conf():
 
 def DBT_start_code():
     # 1. git clone
-#     2. Запуск файла start_dbt.py
+    #     2. Запуск файла start_dbt.py
     pass
+
+
 def Airbyte_PCH():
     """Шаблон для Создания оператора для каждого Connections из Airbyte Postgres-CH"""
     pass
@@ -114,18 +116,19 @@ def create_python_file(path_folder_airflow):
             nameDag=default_args['nameDag']
         )
         file_dag.write(start_text_dag)
-#Ищем только ID Connections Airbyte для создания операторов
+        # Ищем только ID Connections Airbyte для создания операторов
         for row in default_args:
             if 'name_' in row:
                 list_name_conn.append(f'start_airbyte{row}')
                 con_id = default_args[row]
-                text_func_connection = Airbyte_code(name_con=row,
-                                                 con_id=con_id,
-                                                 airbyte_conn_id=default_args['airbyte_conn_id'])
+                text_func_connection = Airbyte_PP(name_con=row,
+                                                    con_id=con_id,
+                                                    airbyte_conn_id=default_args['airbyte_conn_id'])
                 file_dag.write(text_func_connection)
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
 
-#При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
+
+# При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
 if __name__ == "__main__":
     folder_airflow = str(sys.argv[1])
     create_python_file(path_folder_airflow=folder_airflow)
