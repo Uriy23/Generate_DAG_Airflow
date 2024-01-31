@@ -74,20 +74,20 @@ start_airbyte{name_con} = AirbyteTriggerSyncOperator(
 
 
 def create_end_dags(list_):
-    """Создаем последовательность запуска всех COnnerctions Airbyte"""
+    """Создаем последовательность запуска всех Task's """
     return '\n' + '>>'.join(list_).strip()
 
 
 def read_conf():
-    """Читаем конфиги"""
+    """Сохраняем конфиги в переменную rows"""
     with open('Config_generate_dag.txt', encoding='utf-8') as file:
         rows = file.readlines()
     return rows
 
 
 def create_task_dbt():
-    '''Код для создания Task для запуска DBT type_start == (full/not_full)'''
-    # Возможность запуска с разными аргументами
+    '''Код для создания Task для запуска DBT'''
+
     text_task = f'''
 run_DBT = PythonOperator(
     task_id='run DBT',
@@ -97,7 +97,7 @@ run_DBT = PythonOperator(
     return text_task
 
 def create_task_python(name_task, name_func):
-    '''Код для создания Task для запуска '''
+    '''Код для создания Task для запуска Python функций'''
     text_task = f'''
 {name_task} = PythonOperator(
     task_id='{name_task}',
@@ -108,7 +108,7 @@ def create_task_python(name_task, name_func):
 
 def create_python_file(path_folder_airflow):
     """Основная функция
-    Создаем и заполняем файл .py
+    Создаем и заполняем файл, который потом сохраним в Airflow/dags/.py
     """
 
     rows = read_conf()
@@ -129,7 +129,7 @@ def create_python_file(path_folder_airflow):
             nameDag=default_args['nameDag']
         )
         file_dag.write(start_text_dag)
-        # Ищем только ID Connections Airbyte для создания операторов
+        # Начинаем перебирать все параметры из конфиг файла для поиска Task
         for row in default_args:
             print(row)
             if 'name_airbyte' in row:
@@ -141,13 +141,12 @@ def create_python_file(path_folder_airflow):
                 file_dag.write(text_func_connection)
 
             elif row == 'dbt':
-                file_dag.write(create_task_dbt())#Добавляем в Dag запуск [dbt not_full auto]
+                file_dag.write(create_task_dbt())
                 list_name_conn.append(f'run_DBT')
 
             elif 'python_func' in row:
                 file_dag.write(create_task_python(name_task=f'{row}'
-                                                  ,name_func=default_args[row])
-                               )
+                                                  ,name_func=default_args[row]))
                 list_name_conn.append(f'{row}')
 
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
