@@ -12,7 +12,7 @@ name_airbyte_con_2: 16e7fe82a-f3e8-4c6e-9899-9c0f84d72099
 python_func_download_file: download_file
 dbt: 0
 dbt_type_start: dbt run --model dwh_yoshi_shop__calendar
-LOGIN_bitbucket: Chupakhin_uriy
+dbt_LOGIN_bitbucket: Chupakhin_uriy
 name_airbyte_con_3: 16e7fe82a-f3e8-4c6e-9899-9c0f84d72099
 python_func_save_file:save_file
 
