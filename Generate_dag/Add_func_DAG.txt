@@ -1,0 +1,34 @@
+Порядок выполнения Task's в Dag будет создаваться в таком же порядке
+как и в файле Config_generate_dag.txt после строки NEXT_LIST_TASK:NEXT_LIST_TASK
+
+ВСЕ НАЗВАНИЯ ДОЛЖНЫ БЫТЬ УНИКАЛЬНЫМИ
+
+Строка NEXT_LIST_TASK:NEXT_LIST_TASK ничего не делает, а просто указывает,
+ откуда начинать записывать Task
+
+
+Использование функций написаных на Pyhton:
+
+1. Поместите вашу функцию в файл Airflow_python_func.py
+2. Откройте файл Config_generate_dag.txt
+3. После строки NEXT_LIST_TASK:NEXT_LIST_TASK укахите название
+в формате:     python_func_Название_функции: Название_функции
+
+Использование запуска DBT:
+0. Добавьте ваш файл .env в airflow-pipeline/Generate_dag
+1. Откройте Config_generate_dag.txt
+2. Напишите две строки:
+    dbt: 0              --УКАЗЫВАЕТ НА ИСПОЛЬЗОВАНИЕ DBT
+    dbt_type_start: dbt run --select raw_ads+
+dbt_type_start принимает аргументы:
+        1. full --Запускается файл start_dbt.py full auto
+        2. not_full --Запускается файл start_dbt.py not_full auto
+        3. Любая команда в формате: dbt run --select(exclude) в этом случае будет запуск именно команды
+
+Connections Airbyte
+1. Перейдите на Airbyte (HOST:PORT/workspaces/ID_workspaces/connections)
+2. Откройте Connections, который хотите использовать в данном DAG
+3. Скопируйте ID_connections (HOST:PORT/workspaces/ID_workspaces/connections/ID_connections)
+4. Откройте Config_generate_dag.txt
+5. Добавьте строку:
+    name_airbyte_ЛЮБОЕ_НАЗВАНИЕ_: 16e7fe82a-f3e8-4c6e-9899-9c0f84d72099

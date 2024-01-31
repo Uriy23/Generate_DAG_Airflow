@@ -1,6 +1,13 @@
 # Интеграция Airbyte с Airflow 
 * Перед стартом необходимо запросить файл с токеном для бота
 
+
+#### Для создания Pipline можно использовать:
+* Любую функцию написаную на Python (Более подробно читайте в файле Add_func_DAG.txt)
+* Любое соединение в Airbyte (Более подробно читайте в файле Add_func_DAG.txt)
+* Запуск Dbt (Как файла start_dbt.py, так и через dbt run Более подробно смотрите в файле Add_func_DAG.txt)
+
+
 #### Для запуска необходимо изменить файл for_dag.txt 
 * nameDag - Название вашего Dag
 * owner - ФИО разработчика 
@@ -9,13 +16,9 @@
 * start_date - Дата с которой будет работать Dag
 * retries - Количество попыток запуска при возникновении ошибки 
 * retry_delay - Период запуска при ошибке 
-* airbyte_conn_id - Уникальное имя соединения (Подробнее в файле Connect_Airflow_Airbyte)
-* name_PP_ - ИД для Postgres-Postgres Connection Airbyte находится в URl после /connections/
-* name_PCH - ИД для соедениний Postgres-CH
+NEXT_LIST_TASK:NEXT_LIST_TASK -Ничего не означает, после этой строки надо начинать записывать Task
 
-Название Connection в файле for_dag.txt должно начинаться с name_ и далее
-любое название 
 
-#### После того как изменили файл for_dag.txt Можно запускать генерацию DAG 
+#### После того как изменили файл Config_generate_dag.txt Можно запускать генерацию DAG 
 * dag.py ПУТЬ_к_вашей дирректории Airflow/dags и название нового файла
-* ПРИМЕР: dag.py Airflow/dags/dag_airbyte.py
+* ПРИМЕР: Generate_dag.py Airflow/dags/dag_airbyte.py

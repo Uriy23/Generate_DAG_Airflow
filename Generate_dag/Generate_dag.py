@@ -1,5 +1,4 @@
 import sys
-import subprocess
 
 
 def get_tokens_tg():
@@ -35,6 +34,7 @@ from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperat
 from airflow.providers.telegram.operators.telegram import TelegramOperator
 from airflow.operators.python_operator import PythonOperator
 from Airflow_DBT import start_DBT_TASK
+from Airflow_python_func import *
 
 {create_allert_on_tg(get_tokens_tg())}
 
@@ -85,16 +85,27 @@ def read_conf():
     return rows
 
 
-def create_task_dbt():
-    '''Код для создания Task для запуска DBT'''
-    text_task = '''
+def create_task_dbt(type_start=None):
+    '''Код для создания Task для запуска DBT type_start == (full/not_full)'''
+    # Возможность запуска с разными аргументами
+    text_task = f'''
 run_DBT = PythonOperator(
     task_id='run DBT',
     python_callable=start_DBT_TASK,
+    op_args = ['{type_start}']
     dag=dag
     )'''
     return text_task
 
+def create_task_python(name_task, name_func):
+    '''Код для создания Task для запуска '''
+    text_task = f'''
+{name_task} = PythonOperator(
+    task_id='{name_task}',
+    python_callable={name_func},
+    dag=dag
+    )'''
+    return text_task
 
 def create_python_file(path_folder_airflow):
     """Основная функция
@@ -121,7 +132,8 @@ def create_python_file(path_folder_airflow):
         file_dag.write(start_text_dag)
         # Ищем только ID Connections Airbyte для создания операторов
         for row in default_args:
-            if 'name_PP_' in row:
+            print(row)
+            if 'name_airbyte' in row:
                 list_name_conn.append(f'start_airbyte{row}')
                 con_id = default_args[row]
                 text_func_connection = Airbyte_PP(name_con=row,
@@ -129,20 +141,21 @@ def create_python_file(path_folder_airflow):
                                                     airbyte_conn_id=default_args['airbyte_conn_id'])
                 file_dag.write(text_func_connection)
 
-        file_dag.write(create_task_dbt())
-        list_name_conn.append('run_DBT')
-        for row in default_args:
-            if 'name_PCH_' in row:
-                list_name_conn.append(f'start_airbyte{row}')
-                con_id = default_args[row]
-                text_func_connection = Airbyte_PP(name_con=row,
-                                                    con_id=con_id,
-                                                    airbyte_conn_id=default_args['airbyte_conn_id'])
-                file_dag.write(text_func_connection)
+            elif row == 'dbt':
+                file_dag.write(create_task_dbt(
+                    default_args['dbt_type_start']))#Добавляем в Dag запуск [dbt not_full auto]
+                list_name_conn.append(f'run_DBT')
+
+            elif 'python_func' in row:
+                file_dag.write(create_task_python(name_task=f'{row}'
+                                                  ,name_func=default_args[row])
+                               )
+                list_name_conn.append(f'{row}')
+
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
 
-
+create_python_file('Test.py')
 # При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
-if __name__ == "__main__":
-    folder_airflow = str(sys.argv[1])
-    create_python_file(path_folder_airflow=folder_airflow)
+# if __name__ == "__main__":
+#     folder_airflow = str(sys.argv[1])
+#     create_python_file(path_folder_airflow=folder_airflow)
