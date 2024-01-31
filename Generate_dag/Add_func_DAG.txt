@@ -7,14 +7,14 @@
  откуда начинать записывать Task
 
 Использование функций написаных на Pyhton:
-
+----------------------------------------------------------------
 1. Поместите вашу функцию в файл Airflow_python_func.py
 2. Откройте файл Config_generate_dag.txt
 3. После строки NEXT_LIST_TASK:NEXT_LIST_TASK укахите название
 в формате:     python_func_Название_функции: Название_функции
 
 Использование запуска DBT:
-
+-----------------------------------------------------------------------
 0. Добавьте ваш файл .env в airflow-pipeline/Generate_dag
 1. Откройте Config_generate_dag.txt
 2. Напишите две строки:
@@ -26,7 +26,7 @@ dbt_type_start принимает аргументы:
         3. Любая команда в формате: dbt run --select(exclude) в этом случае будет запуск именно команды
 
 Connections Airbyte
-
+--------------------------------------------------------------------------
 1. Перейдите на Airbyte (HOST:PORT/workspaces/ID_workspaces/connections)
 2. Откройте Connections, который хотите использовать в данном DAG
 3. Скопируйте ID_connections (HOST:PORT/workspaces/ID_workspaces/connections/ID_connections)
