@@ -85,14 +85,13 @@ def read_conf():
     return rows
 
 
-def create_task_dbt(type_start=None):
+def create_task_dbt():
     '''Код для создания Task для запуска DBT type_start == (full/not_full)'''
     # Возможность запуска с разными аргументами
     text_task = f'''
 run_DBT = PythonOperator(
     task_id='run DBT',
     python_callable=start_DBT_TASK,
-    op_args = ['{type_start}']
     dag=dag
     )'''
     return text_task
@@ -142,8 +141,7 @@ def create_python_file(path_folder_airflow):
                 file_dag.write(text_func_connection)
 
             elif row == 'dbt':
-                file_dag.write(create_task_dbt(
-                    default_args['dbt_type_start']))#Добавляем в Dag запуск [dbt not_full auto]
+                file_dag.write(create_task_dbt())#Добавляем в Dag запуск [dbt not_full auto]
                 list_name_conn.append(f'run_DBT')
 
             elif 'python_func' in row:

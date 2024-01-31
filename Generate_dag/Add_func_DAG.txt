@@ -17,8 +17,9 @@
 -----------------------------------------------------------------------
 0. Добавьте ваш файл .env в airflow-pipeline/Generate_dag
 1. Откройте Config_generate_dag.txt
-2. Напишите две строки:
+2. Напишите три строки:
     dbt: 0              --УКАЗЫВАЕТ НА ИСПОЛЬЗОВАНИЕ DBT
+    dbt_repository: https://YOUR_LOGIN@bitbucket.org/s25-ds/dwh_yoshi_v1.git (Укажите ваш логин bitbucket)
     dbt_type_start: dbt run --select raw_ads+
 dbt_type_start принимает аргументы:
         1. full --Запускается файл start_dbt.py full auto
