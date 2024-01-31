@@ -8,6 +8,7 @@ node_modules/
 dist/
 **/Api_tg.txt
 **/dwh_yoshi_v1
+**/.env
 Generate_dag/dwh_yoshi_v1/dbt_transform/.env
 # Compiled Java class files
 *.class

@@ -20,5 +20,5 @@
 * Далее идет список Task's (Как их записывать смотрите в Add_func_DAG.txt)
 
 #### После того как изменили файл Config_generate_dag.txt Можно запускать генерацию DAG 
-* dag.py ПУТЬ_к_вашей дирректории Airflow/dags и название нового файла
+* Generate_dag.py ПУТЬ_к_вашей дирректории Airflow/dags и название нового файла
 * ПРИМЕР: Generate_dag.py Airflow/dags/dag_airbyte.py
