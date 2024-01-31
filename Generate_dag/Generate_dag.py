@@ -152,8 +152,8 @@ def create_python_file(path_folder_airflow):
 
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
 
-create_python_file('Test.py')
+# create_python_file('Test.py')
 # При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
-# if __name__ == "__main__":
-#     folder_airflow = str(sys.argv[1])
-#     create_python_file(path_folder_airflow=folder_airflow)
+if __name__ == "__main__":
+    folder_airflow = str(sys.argv[1])
+    create_python_file(path_folder_airflow=folder_airflow)
