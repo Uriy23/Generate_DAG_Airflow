@@ -20,7 +20,7 @@ def read_config_file():
                         len(i) > 4}  # Словарь с конфигами
         return default_args
 
-config = read_config_file()
+
 
 def transport_file():
 
@@ -49,8 +49,9 @@ def start_DBT_command(config):
     subprocess.run(dbt_command['dbt_type_start'], shell=True, check=True)
 
 
-def start_DBT_TASK(config):
+def start_DBT_TASK():
     '''Главная Функция запуска Dbt'''
+    config = read_config_file()
     list_lib = ['dbt-postgres','pandas','numpy','yfinance']
 
     cmd_git_clone = f'git clone https://{config["dbt_LOGIN_bitbucket"]}@bitbucket.org/s25-ds/dwh_yoshi_v1.git'
@@ -65,8 +66,7 @@ def start_DBT_TASK(config):
 
     if (config['dbt_type_start'] != 'full') and (config['dbt_type_start']!='not_full'):
         start_DBT_command(config)
-
     else:
         start_DBT_file(config)
 
-start_DBT_TASK(config)
+start_DBT_TASK()
