@@ -142,7 +142,7 @@ def create_python_file(path_folder_airflow):
                 file_dag.write(text_func_connection)
 
             elif row == 'dbt':
-                '''СОздаем уникальное название для фукнции DBT_RUN'''
+                #СОздаем уникальное название для фукнции DBT_RUN
                 # Цикл нужен для того, чтобы перебрать все запуски DBt, вдруг их несколько
                 for number in range(1,int(default_args['dbt'])+1):
                     if (default_args[f'dbt_type_start_{number}'] == 'full') or (default_args[f'dbt_type_start_{number}']=='not_full'):
@@ -160,8 +160,8 @@ def create_python_file(path_folder_airflow):
 
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
 
-create_python_file('Test.py')
+# create_python_file('Test.py')
 # При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
-# if __name__ == "__main__":
-#     folder_airflow = str(sys.argv[1])
-#     create_python_file(path_folder_airflow=folder_airflow)
+if __name__ == "__main__":
+    folder_airflow = str(sys.argv[1])
+    create_python_file(path_folder_airflow=folder_airflow)
