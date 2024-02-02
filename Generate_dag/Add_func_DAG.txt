@@ -15,14 +15,6 @@
 
 Использование запуска DBT:
 -----------------------------------------------------------------------
-ЕСли вы хотите использовать несколько запусков dbt, то для каждого запуска необходимо прописать dbt_type_start
-    ПРИМЕР: Вы хотите запустить две команды для dbt (dbt run --model model1 и dbt run --model model2)
-            ТОгда вы должны заполнить Config_generate_dag.txt такми образом:
-                dbt: 2   (Уникальные параметры ПИШЕМ ТОЛЬКО ОДИН РАЗ ) --Цифра 2, указывает на количество используемых задач для DBT
-                dbt_LOGIN_bitbucket: https://YOUR_LOGIN@bitbucket.org/s25-ds/dwh_yoshi_v1.git (Укажите ваш логин bitbucket) (Уникальные параметры ПИШЕМ ТОЛЬКО ОДИН РАЗ)
-                dbt_type_start_1: dbt run --model model1
-                dbt_type_start_2: dbt run --model model2
-
 
 0. Добавьте ваш файл .env в airflow-pipeline/Generate_dag
 1. Откройте Config_generate_dag.txt
@@ -34,6 +26,18 @@ dbt_type_start принимает аргументы:
         1. full --Запускается файл start_dbt.py full auto
         2. not_full --Запускается файл start_dbt.py not_full auto
         3. Любая команда в формате: dbt run --select(exclude) в этом случае будет запуск именно команды
+
+ДОПОЛНИТЕЛЬНЫЙ БЛОК
+ЕСли вы хотите использовать несколько запусков dbt, то для каждого запуска необходимо прописать dbt_type_start
+    ПРИМЕР: Вы хотите запустить две команды для dbt (dbt run --model model1 и dbt run --model model2)
+            ТОгда вы должны заполнить Config_generate_dag.txt такми образом:
+                dbt: 2   (Уникальные параметры ПИШЕМ ТОЛЬКО ОДИН РАЗ ) --Цифра 2, указывает на количество используемых задач для DBT
+                dbt_LOGIN_bitbucket: https://YOUR_LOGIN@bitbucket.org/s25-ds/dwh_yoshi_v1.git (Укажите ваш логин bitbucket) (Уникальные параметры ПИШЕМ ТОЛЬКО ОДИН РАЗ)
+                dbt_type_start_1: dbt run --model model1
+                dbt_type_start_2: dbt run --model model2
+
+
+
 
 Connections Airbyte
 --------------------------------------------------------------------------
