@@ -19,7 +19,7 @@
 0. Добавьте ваш файл .env в airflow-pipeline/Generate_dag
 1. Откройте Config_generate_dag.txt
 2. Напишите три строки:
-    dbt: 1              --УКАЗЫВАЕТ НА ИСПОЛЬЗОВАНИЕ DBT
+    dbt: 1              --УКАЗЫВАЕТ НА ИСПОЛЬЗОВАНИЕ DBT и на количество задач для DBT
     dbt_LOGIN_bitbucket: https://YOUR_LOGIN@bitbucket.org/s25-ds/dwh_yoshi_v1.git (Укажите ваш логин bitbucket)
     dbt_type_start_1: dbt run --select raw_ads+
 dbt_type_start принимает аргументы:
