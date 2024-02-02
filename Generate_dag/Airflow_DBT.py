@@ -4,7 +4,7 @@ import os
 
 def before_launch_DBT():
     os.chdir('dwh_yoshi_v1/dbt_transform')
-    from dwh_yoshi_v1.dbt_transform.start_dbt import load_variables,start_get_currency
+    from dwh_yoshi_v1.dbt_transform.start_dbt import load_variables
     load_variables()
     print('переменныее загружены')
 
@@ -21,9 +21,7 @@ def read_config_file():
         return default_args
 
 
-
 def transport_file():
-
     src = '.env'
     dst = 'dwh_yoshi_v1/dbt_transform'
     filename = os.path.basename(src)
@@ -34,7 +32,6 @@ def transport_file():
 def start_DBT_file(config):
     '''Запуск файла start_dbt.py'''
 
-    #Предусмотреть возможность запуска с аргусментами full/not_full
     os.chdir('dwh_yoshi_v1/dbt_transform')
     script_path = "start_dbt.py"
     args = [config['dbt_type_start'], "auto"]
@@ -56,7 +53,6 @@ def start_DBT_TASK():
 
     cmd_git_clone = f'git clone https://{config["dbt_LOGIN_bitbucket"]}@bitbucket.org/s25-ds/dwh_yoshi_v1.git'
     try:
-        print(cmd_git_clone)
         subprocess.call(cmd_git_clone)
         transport_file()
         subprocess.run(f'pip install {" ".join(list_lib)}', shell=True, check=True)
@@ -69,4 +65,4 @@ def start_DBT_TASK():
     else:
         start_DBT_file(config)
 
-start_DBT_TASK()
+# start_DBT_TASK()

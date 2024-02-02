@@ -2,6 +2,7 @@ import sys
 
 
 def get_tokens_tg():
+    '''Получаем токен для ТГ-бота'''
     with open('Api_tg.txt', encoding='utf-8') as file:
         rows = file.readlines()
         API_tg = {i.split(':')[0]: i.split(':')[1].replace('\n', '').strip() for i in rows if len(i) > 3}
@@ -9,6 +10,7 @@ def get_tokens_tg():
 
 
 def create_allert_on_tg(tokens):
+    '''Генерируем код для оповещения ошибок через ТГ-бота'''
     text_allert = f'''
 def on_failure_callback(context):    
     message = "Task failed. DAG: {{0}}, Task: {{1}}, Execution date: {{2}}".format(
@@ -85,12 +87,12 @@ def read_conf():
     return rows
 
 
-def create_task_dbt():
+def create_task_dbt(name_func):
     '''Код для создания Task для запуска DBT'''
 
     text_task = f'''
-run_DBT = PythonOperator(
-    task_id='run DBT',
+run_DBT_{name_func} = PythonOperator(
+    task_id='run_DBT_{name_func}',
     python_callable=start_DBT_TASK,
     dag=dag
     )'''
@@ -131,7 +133,6 @@ def create_python_file(path_folder_airflow):
         file_dag.write(start_text_dag)
         # Начинаем перебирать все параметры из конфиг файла для поиска Task
         for row in default_args:
-            print(row)
             if 'name_airbyte' in row:
                 list_name_conn.append(f'start_airbyte{row}')
                 con_id = default_args[row]
@@ -141,8 +142,16 @@ def create_python_file(path_folder_airflow):
                 file_dag.write(text_func_connection)
 
             elif row == 'dbt':
-                file_dag.write(create_task_dbt())
-                list_name_conn.append(f'run_DBT')
+                '''СОздаем уникальное название для фукнции DBT_RUN'''
+                # Цикл нужен для того, чтобы перебрать все запуски DBt, вдруг их несколько
+                for number in range(1,int(default_args['dbt'])+1):
+                    if (default_args[f'dbt_type_start_{number}'] == 'full') or (default_args[f'dbt_type_start_{number}']=='not_full'):
+                        name_func = default_args[f'dbt_type_start_{number}']
+                    else:
+                        name_func = default_args[f'dbt_type_start_{number}'].split('--')[1].replace(' ','')+'_'+str(number)
+
+                    file_dag.write(create_task_dbt(name_func = name_func))
+                    list_name_conn.append(f'run_DBT_{name_func}')
 
             elif 'python_func' in row:
                 file_dag.write(create_task_python(name_task=f'{row}'
@@ -151,8 +160,8 @@ def create_python_file(path_folder_airflow):
 
         file_dag.write(create_end_dags(list_name_conn).replace('  ', ''))
 
-# create_python_file('Test.py')
+create_python_file('Test.py')
 # При запуске передаем путь и название новго файла (Файл должен быть сохранен в Airflow/dags/)
-if __name__ == "__main__":
-    folder_airflow = str(sys.argv[1])
-    create_python_file(path_folder_airflow=folder_airflow)
+# if __name__ == "__main__":
+#     folder_airflow = str(sys.argv[1])
+#     create_python_file(path_folder_airflow=folder_airflow)
